@@ -8,33 +8,46 @@ namespace TakeHomeAssignment;
 
 public class ProcessFile
 {
-    //creates a new array of duplicate strings
+    //creates a new array of duplicate strings from array created from the input file
+    //uses the fuzzyWuzzy (fuzzySharp) library for comparison, which in turn uses the Levenshtein algorithm for a comparison score
+    //FuzzySharp Nuget https://www.nuget.org/packages/FuzzySharp#readme-body-tab
+    
     public static List<string> FindDuplicates(List<string> inputArray, int threshold)
     {
-        // loop through array with a string to compare, use fuzzy comparison function
-        // if the comparison results in a high likelihood of a duplicate
-            //stop the loop, add the comparison string to a result array and remove the second comparison string
-            //so it isn't iterated over twice unnecessarily
+            
+        
+        //sort the list alphabetically as duplicates will probably have similar starting characters
+        inputArray.Sort();
             
         List<string> result = new List<string>();
+        
+        //so indices won't get processed twice they are stored in this HashSet
+        HashSet<int> processedIndices = new HashSet<int>();
             
+            //Some inspiration for this from this SO thread
+            //https://stackoverflow.com/questions/18916396/trying-to-optimise-fuzzy-matching
             for (int i = 0; i < inputArray.Count; i++)
             {
+                if (processedIndices.Contains(i)) continue;
+                
                 string currentString = inputArray[i];
-                Console.Write($"current string: {currentString}");
 
                 for (int j = i + 1; j < inputArray.Count; j++)
                 {
+                    if (processedIndices.Contains(j)) continue;
                     string stringToCompare = inputArray[j];
-
+                    
+                    //There is a list of different methods in the library to test fuzziness ratio
+                    //tried a couple different methods. Didn't test them all extensively.
+                    //this one seemed "good enough" 
                     int fuzziness = Fuzz.Ratio(currentString, stringToCompare);
 
+                    //threshold I am using is 90
                     if (fuzziness >= threshold)
                     {
                         result.Add(currentString);
-                        inputArray.RemoveAt(j);
-                        j--;
-                        Console.WriteLine($"\n FOUND FUZZINESS: {stringToCompare}");
+                        processedIndices.Add(j);
+                        Console.WriteLine("Found duplicate for " + stringToCompare);
                         break;
                     }
                 }

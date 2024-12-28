@@ -8,6 +8,7 @@ namespace TakeHomeAssignment;
 
 public class FileWriter
 {
+    //writes the results of the file processing to a new file with the input filepath
     public static void WriteToFile(List<string> dupes, string filePath)
     {
         try
