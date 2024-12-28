@@ -21,18 +21,20 @@ public class ProcessFile
             for (int i = 0; i < inputArray.Count; i++)
             {
                 string currentString = inputArray[i];
+                Console.Write($"current string: {currentString}");
 
                 for (int j = i + 1; j < inputArray.Count; j++)
                 {
                     string stringToCompare = inputArray[j];
 
-                    int fuzziness = Fuzz.WeightedRatio(currentString, stringToCompare);
+                    int fuzziness = Fuzz.Ratio(currentString, stringToCompare);
 
                     if (fuzziness >= threshold)
                     {
                         result.Add(currentString);
                         inputArray.RemoveAt(j);
                         j--;
+                        Console.WriteLine($"\n FOUND FUZZINESS: {stringToCompare}");
                         break;
                     }
                 }
