@@ -8,6 +8,7 @@ namespace TakeHomeAssignment;
 class Program
 {
     private static string _filePath;
+    private static int _threshold;
 
     // Takes a .txt file of strings separated by a new line and returns potential duplicates
     static void Main(string[] args)
@@ -18,10 +19,20 @@ class Program
         _filePath = Console.ReadLine();
         
         //returns an array of strings to be processed
-        string[] linesArray = FileReader.CreateArrayFromFile(_filePath);
+        List<string> linesArray = FileReader.CreateArrayFromFile(_filePath);
+        
+        //ask what the similarity threshold they would like to be
+        Console.WriteLine("Enter the threshold:");
+        _threshold = int.Parse(Console.ReadLine());
         
         //process the lines
         
+        List<string> duplicates = ProcessFile.FindDuplicates(linesArray, _threshold);
+
+        foreach (string duplicate in duplicates)
+        {
+            Console.WriteLine(duplicate);
+        }
         //produce a file of duplicates
         
     }
